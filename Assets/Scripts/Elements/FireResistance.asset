@@ -16,7 +16,7 @@ MonoBehaviour:
   physicalResistance: 0
   elements:
   - element: {fileID: 11400000, guid: 59d6a86a28556744b8b159cd39db719e, type: 2}
-    damagePercent: 25
+    damagePercent: 67
   statuses:
   - effect: {fileID: 11400000, guid: 5fd8d382c0b0b1e4684f630d94bd4939, type: 2}
     resistancePercent: 75

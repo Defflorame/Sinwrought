@@ -10,6 +10,7 @@ namespace Game.Player
     ///     После castTime заряд готов и держится сколько угодно; при отпускании SpellCaster.TryRelease
     ///     выпускает эффекты, списывает стоимость и запускает кулдаун.
     ///   Recovery — после выпуска игрок ещё recoveryTime не может начать другое боевое действие.
+    /// Длительности берутся у SpellCaster (GetCastTime/GetRecoveryTime): они учитывают характеристику CastSpeed.
     /// castTime = 0 (SpellData.IsInstant) — мгновенный каст: выпуск прямо в Enter(), без заряда.
     /// Charging прерываем (CanInterrupt): любое другое боевое действие уходит в другое состояние,
     /// Exit() отменяет заряд бесплатно. Ходить можно во всех фазах, замедления нет.
@@ -88,7 +89,7 @@ namespace Game.Player
 
                 case CastPhase.Charging:
                     _elapsed += Time.deltaTime;
-                    if (!_chargeReady && _elapsed >= _spell.castTime)
+                    if (!_chargeReady && _elapsed >= _spellCaster.GetCastTime(_spell))
                     {
                         _chargeReady = true;
                         _spellCaster.ReportChargeReady(_spell);
@@ -97,7 +98,7 @@ namespace Game.Player
 
                 case CastPhase.Recovery:
                     _elapsed += Time.deltaTime;
-                    if (_elapsed >= _spell.recoveryTime)
+                    if (_elapsed >= _spellCaster.GetRecoveryTime(_spell))
                     {
                         _onFinished?.Invoke();
                     }

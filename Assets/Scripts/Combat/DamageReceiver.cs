@@ -33,6 +33,12 @@ namespace Game.Combat
             _health = GetComponent<HealthComponent>();
         }
 
+        /// <summary>Подменяет профиль сопротивлений (профиль выбранного класса игрока).</summary>
+        public void SetResistanceProfile(ResistanceProfileData profile)
+        {
+            resistanceProfile = profile;
+        }
+
         /// <summary>
         /// baseDamage — уже посчитанный DamageResolver базовый урон,
         /// ДО применения блока/парирования.
@@ -89,7 +95,7 @@ namespace Game.Combat
             Debug.Log($"{name}: ReceiveKnockback({direction}, {force:F1}) — пока без физической реакции.");
         }
 
-                /// <summary>
+        /// <summary>
         /// Итоговый % стихийного урона: значение профиля минус бонус сопротивления
         /// от экипировки/эффектов (в процентных пунктах). Зажим 0..200.
         /// 100 — норма, 0 — иммунитет, 200 — двойной урон.

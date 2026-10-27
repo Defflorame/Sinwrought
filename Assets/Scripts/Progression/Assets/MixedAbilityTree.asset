@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 97ae4b4f23dd1ad4993037bb92204336, type: 3}
+  m_Name: MixedAbilityTree
+  m_EditorClassIdentifier: Assembly-CSharp::Game.Progression.AbilityTreeData
+  branches:
+  - branchName: Magic
+    nodes:
+    - {fileID: 11400000, guid: aa68b2a092adc244b92ed19746614c87, type: 2}
+    - {fileID: 11400000, guid: 55be403552b21dd488ac21c4b8d12c45, type: 2}
+    - {fileID: 11400000, guid: b1e548d063673414ebef7f6d9d25848a, type: 2}
+  - branchName: Fight
+    nodes:
+    - {fileID: 11400000, guid: 4b995503e882cf447a37588e3c5c3318, type: 2}
+    - {fileID: 11400000, guid: 6978aaaa6d01ee24a84b17707aee4462, type: 2}
+    - {fileID: 11400000, guid: 87c3b53023474a541a992ec8ec0b03f9, type: 2}
+  - branchName: Stats
+    nodes:
+    - {fileID: 11400000, guid: 642814a6f93657141abdb2765aaee6b3, type: 2}
+    - {fileID: 11400000, guid: 3a1a3bdd5edaae8499e92af1e082f987, type: 2}
+    - {fileID: 11400000, guid: 6b4a2e6e10cd00543abc2f0f1d7f5b07, type: 2}
+  baseCost: 1
+  costPerTier: 1

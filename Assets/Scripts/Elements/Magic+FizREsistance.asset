@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Magic+FizREsistance
   m_EditorClassIdentifier: Assembly-CSharp::Game.Combat.ResistanceProfileData
   magicResistance: 0
-  physicalResistance: 100
+  physicalResistance: 50
   elements: []
   statuses: []

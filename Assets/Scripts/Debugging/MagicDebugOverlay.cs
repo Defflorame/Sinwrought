@@ -92,7 +92,7 @@ namespace Game.Debugging
             }
             else
             {
-                GUILayout.Label($"Charge: {Time.time - _chargeStartTime:F2} / {_chargeSpell.castTime:F2}s", label);
+                GUILayout.Label($"Charge: {Time.time - _chargeStartTime:F2} / {spellCaster.GetCastTime(_chargeSpell):F2}s", label);
             }
 
             if (statusEffects != null)
