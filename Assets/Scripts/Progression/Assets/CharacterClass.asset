@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b86a1ead3796da64eaac3f7c3b35ef19, type: 3}
+  m_Name: CharacterClass
+  m_EditorClassIdentifier: Assembly-CSharp::Game.Progression.CharacterClassData
+  className: Mixed
+  description: 
+  baseStats: {fileID: 11400000, guid: 0fbdcb857b02de845838c0d4718db9d6, type: 2}
+  resistanceProfile: {fileID: 11400000, guid: 1990c120c1ea50b419ba1d449050f58e, type: 2}
+  levelProgression: {fileID: 11400000, guid: 280705f28094ad34296288050cca01e4, type: 2}
+  abilityTree: {fileID: 11400000, guid: 253655ddb3771bf47af79763441320b0, type: 2}
+  abilityPointInterval: 3
+  abilityPointsPerInterval: 1

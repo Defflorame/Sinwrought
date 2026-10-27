@@ -8,7 +8,7 @@ namespace Game.Player.Stats
     /// PhysicalDamageBonusPercent и DefenseValue — боевые модификаторы без
     /// своего компонента-пула: их не проталкивают ни в один Component,
     /// их читает напрямую Combat-система (DamageResolver) в момент расчёта
-    /// урона.
+    /// урона. StaminaCostMultiplier читает StaminaComponent, CastSpeedMultiplier — SpellCaster.
     /// </summary>
     public class DerivedCharacterStats
     {
@@ -21,6 +21,8 @@ namespace Game.Player.Stats
         public float DefenseValue { get; }
         public float MovementSpeed { get; }
         public float CarryWeightLimit { get; }
+        public float StaminaCostMultiplier { get; }
+        public float CastSpeedMultiplier { get; }
 
         public DerivedCharacterStats(
             int maxHealth,
@@ -31,7 +33,9 @@ namespace Game.Player.Stats
             float magicDamage,
             float defenseValue,
             float movementSpeed,
-            float carryWeightLimit)
+            float carryWeightLimit,
+            float staminaCostMultiplier = 1f,
+            float castSpeedMultiplier = 1f)
         {
             MaxHealth = maxHealth;
             MaxStamina = maxStamina;
@@ -42,6 +46,8 @@ namespace Game.Player.Stats
             DefenseValue = defenseValue;
             MovementSpeed = movementSpeed;
             CarryWeightLimit = carryWeightLimit;
+            StaminaCostMultiplier = staminaCostMultiplier;
+            CastSpeedMultiplier = castSpeedMultiplier;
         }
     }
 }

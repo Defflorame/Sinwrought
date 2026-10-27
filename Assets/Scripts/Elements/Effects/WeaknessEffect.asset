@@ -16,6 +16,8 @@ MonoBehaviour:
   duration: 10
   tickInterval: 1
   tickDamage: 0
+  tickMaxHealthPercent: 0
+  tickIgnoresDefense: 0
   tickElement: {fileID: 0}
   statModifiers:
   - stat: 6

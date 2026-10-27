@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 51cd190ccd6946940abdcab42999fe03, type: 3}
+  m_Name: MixedResistance
+  m_EditorClassIdentifier: Assembly-CSharp::Game.Combat.ResistanceProfileData
+  magicResistance: 10
+  physicalResistance: 10
+  elements:
+  - element: {fileID: 11400000, guid: cdc1cca7d6b74944f87a330b8935282e, type: 2}
+    damagePercent: 75
+  - element: {fileID: 11400000, guid: 38bbd3ce9b05d6b4ebb3b0f2d93122a5, type: 2}
+    damagePercent: 125
+  - element: {fileID: 11400000, guid: 59d6a86a28556744b8b159cd39db719e, type: 2}
+    damagePercent: 110
+  - element: {fileID: 11400000, guid: d65cf37aa1b636a4887ce79b5d00d21c, type: 2}
+    damagePercent: 50
+  statuses: []

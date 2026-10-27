@@ -27,6 +27,16 @@ namespace Game.Stats
             Recalculate();
         }
 
+        /// <summary>Подменяет базовые характеристики (стартовые значения выбранного класса). Модификаторы сохраняются.</summary>
+        public void SetBaseStats(BaseCharacterStats newBaseStats)
+        {
+            if (newBaseStats == null) return;
+
+            baseStats = newBaseStats;
+            Recalculate();
+            OnStatsChanged?.Invoke(Stats);
+        }
+
         public void AddModifier(StatModifier modifier)
         {
             _modifiers.Add(modifier);
@@ -55,11 +65,18 @@ namespace Game.Stats
 
             float strength = ApplyModifiers(StatType.Strength, baseStats.strength);
             int maxHealth = baseStats.baseHealth + Mathf.RoundToInt(strength * baseStats.healthPerStrengthPoint);
-            // Бонус от силы + бонус от модификаторов PhysicalDamageBonus (баффы, предметы): значения Flat = проценты.
-            float physicalDamageBonusPercent = strength * baseStats.physicalDamageBonusPerStrengthPoint
-                + ApplyModifiers(StatType.PhysicalDamageBonus, 0f);
+            // Flat — процентные пункты к бонусу (вместе с бонусом от силы).
+            // Percent — отдельный множитель на весь физический урон.
+            float flatBonus = strength * baseStats.physicalDamageBonusPerStrengthPoint
+                + SumModifiers(StatType.PhysicalDamageBonus, StatModifierType.Flat);
+            float damageMultiplier = (1f + flatBonus / 100f)
+                * (1f + SumModifiers(StatType.PhysicalDamageBonus, StatModifierType.Percent) / 100f);
+            float physicalDamageBonusPercent = (damageMultiplier - 1f) * 100f;
 
             float maxStamina = ApplyModifiers(StatType.Stamina, baseStats.stamina);
+            float staminaRegen = ApplyModifiers(StatType.StaminaRegen, baseStats.staminaRegenPerSecond);
+            float staminaCostMultiplier = ApplyModifiers(StatType.StaminaCost, 1f);
+            float castSpeedMultiplier = ApplyModifiers(StatType.CastSpeed, 1f);
             float maxMana = ApplyModifiers(StatType.Mana, baseStats.mana);
             float magicDamage = ApplyModifiers(StatType.MagicDamage, baseStats.magicDamage);
             float speed = ApplyModifiers(StatType.Speed, baseStats.speed);
@@ -71,15 +88,18 @@ namespace Game.Stats
             Stats = new DerivedCharacterStats(
                 maxHealth: Mathf.Max(1, maxHealth),
                 maxStamina: Mathf.Max(0f, maxStamina),
-                staminaRegenPerSecond: baseStats.staminaRegenPerSecond,
-                physicalDamageBonusPercent: Mathf.Max(0f, physicalDamageBonusPercent),
+                staminaRegenPerSecond: Mathf.Max(0f, staminaRegen),
+                physicalDamageBonusPercent: Mathf.Max(-100f, physicalDamageBonusPercent),
                 maxMana: Mathf.Max(0f, maxMana),
                 magicDamage: magicDamage,
                 defenseValue: Mathf.Max(0f, defenseValue),
                 movementSpeed: Mathf.Max(0f, speed),
-                carryWeightLimit: Mathf.Max(0f, carryWeight));
-            Debug.Log($"CharacterStats: recalculated -> HP {Stats.MaxHealth}, Stamina {Stats.MaxStamina:F1} (regen {Stats.StaminaRegenPerSecond:F1}/s), " +
-      $"Mana {Stats.MaxMana:F1}, PhysicalDamageBonus {Stats.PhysicalDamageBonusPercent:F1}%, MagicDamage {Stats.MagicDamage:F1}, " +
+                carryWeightLimit: Mathf.Max(0f, carryWeight),
+                // Нижняя граница 0.1: иначе большие бонусы сделают действия бесплатными или каст бесконечно быстрым/медленным.
+                staminaCostMultiplier: Mathf.Max(0.1f, staminaCostMultiplier),
+                castSpeedMultiplier: Mathf.Max(0.1f, castSpeedMultiplier));
+            Debug.Log($"CharacterStats: recalculated -> HP {Stats.MaxHealth}, Strength {strength:F1}, Stamina {Stats.MaxStamina:F1} (regen {Stats.StaminaRegenPerSecond:F1}/s, cost x{Stats.StaminaCostMultiplier:F2}), " +
+      $"Mana {Stats.MaxMana:F1}, PhysicalDamageBonus {Stats.PhysicalDamageBonusPercent:F1}%, MagicDamage {Stats.MagicDamage:F1}, CastSpeed x{Stats.CastSpeedMultiplier:F2}, " +
       $"Defense {Stats.DefenseValue:F1}, Speed {Stats.MovementSpeed:F1}, CarryWeight {Stats.CarryWeightLimit:F1}");
         }
 
@@ -105,6 +125,17 @@ namespace Game.Stats
             }
 
             return (baseValue + flatSum) * (1f + percentSum / 100f);
+        }
+
+        private float SumModifiers(StatType stat, StatModifierType type)
+        {
+            float sum = 0f;
+            for (int i = 0; i < _modifiers.Count; i++)
+            {
+                StatModifier modifier = _modifiers[i];
+                if (modifier.Stat == stat && modifier.Type == type) sum += modifier.Value;
+            }
+            return sum;
         }
     }
 }

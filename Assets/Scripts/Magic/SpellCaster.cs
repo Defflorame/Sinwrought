@@ -2,13 +2,15 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Game.Combat;
+using Game.Stats;
 
 namespace Game.Magic
 {
     /// <summary>
     /// Проверяет и списывает стоимость заклинания, ведёт кулдауны и сообщает о
     /// стадиях каста событиями (для будущих PlayerAnimator/Audio/VFX/HUD).
-    /// Не знает про кольца, ввод и состояния: время заряда считает CastState.
+    /// Не знает про кольца, ввод и состояния: время заряда считает CastState,
+    /// но длительности (с учётом характеристики CastSpeed) берёт отсюда.
     /// Стоимость списывается и кулдаун стартует ТОЛЬКО в TryRelease.
     /// </summary>
     public class SpellCaster : MonoBehaviour
@@ -17,6 +19,8 @@ namespace Game.Magic
         [SerializeField] private HealthComponent health;
         [SerializeField] private SpentHealthRecovery spentHealthRecovery;
         [SerializeField] private SpellEffectExecutor effectExecutor;
+        [Tooltip("Необязательно. Если назначено — время каста и восстановления делится на характеристику CastSpeed.")]
+        [SerializeField] private CharacterStats characterStats;
 
         public event Action<SpellData> OnChargeStarted;
         public event Action<SpellData> OnChargeReady;
@@ -24,6 +28,15 @@ namespace Game.Magic
         public event Action<SpellData> OnSpellReleased;
 
         private readonly Dictionary<SpellData, float> _readyAt = new Dictionary<SpellData, float>();
+
+        private float CastSpeedMultiplier =>
+            characterStats != null && characterStats.Stats != null ? characterStats.Stats.CastSpeedMultiplier : 1f;
+
+        /// <summary>Сколько нужно держать кнопку до готовности заряда (castTime / CastSpeed).</summary>
+        public float GetCastTime(SpellData spell) => spell.castTime / CastSpeedMultiplier;
+
+        /// <summary>Сколько после выпуска нельзя действовать (recoveryTime / CastSpeed).</summary>
+        public float GetRecoveryTime(SpellData spell) => spell.recoveryTime / CastSpeedMultiplier;
 
         public float GetCooldownRemaining(SpellData spell)
         {

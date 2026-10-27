@@ -30,10 +30,7 @@ namespace Game.Combat
             float finalDamage = Mathf.Max(0f, physical + elemental - defense);
 
             string note = finalDamage <= 0f && (physical + elemental) > 0f ? "  ← весь урон поглощён защитой" : "";
-            Debug.Log($"DamageResolver: {receiver.name} ← {(packet.Source != null ? packet.Source.name : "?")} — физ. {physical:F1} + стихия {elemental:F1} − защита {defense:F1} (ignoreDefense={packet.IgnoreDefense}) = {finalDamage:F1}{note}");
             Debug.Log($"DamageResolver: {receiver.name} — физ. {physical:F1} + стихия {elemental:F1} − защита {defense:F1} = {finalDamage:F1}{note}");
-
-
             return Mathf.RoundToInt(finalDamage);
         }
 

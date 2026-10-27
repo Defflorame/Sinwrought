@@ -25,4 +25,4 @@ MonoBehaviour:
   handPrefab: {fileID: 0}
   elementResistances:
   - element: {fileID: 11400000, guid: 59d6a86a28556744b8b159cd39db719e, type: 2}
-    percent: 0
+    percent: 50

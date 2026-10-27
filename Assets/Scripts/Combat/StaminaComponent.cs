@@ -6,9 +6,10 @@ using Game.Stats;
 namespace Game.Combat
 {
     /// <summary>
-    /// Выносливость. Если назначен CharacterStats — максимум и скорость
-    /// регенерации берутся из характеристик (подписка на OnStatsChanged).
+    /// Выносливость. Если назначен CharacterStats — максимум, скорость регенерации и множитель
+    /// трат берутся из характеристик (подписка на OnStatsChanged).
     /// Без него используются значения из инспектора.
+    /// Итоговый множитель трат = нагрузка экипировки (SetCostMultiplier) × характеристика StaminaCost.
     /// </summary>
     public class StaminaComponent : MonoBehaviour
     {
@@ -25,7 +26,10 @@ namespace Game.Combat
 
         private bool _regenEnabled = true;
         private float _regenBlockedUntil;
-        public float CostMultiplier { get; private set; } = 1f;
+        private float _loadCostMultiplier = 1f;
+        private float _statsCostMultiplier = 1f;
+
+        public float CostMultiplier => _loadCostMultiplier * _statsCostMultiplier;
 
 
         private void Awake()
@@ -104,13 +108,15 @@ namespace Game.Combat
         {
             maxStamina = Mathf.Max(0f, derived.MaxStamina);
             regenPerSecond = Mathf.Max(0f, derived.StaminaRegenPerSecond);
+            _statsCostMultiplier = Mathf.Max(0f, derived.StaminaCostMultiplier);
             CurrentStamina = refillToFull ? maxStamina : Mathf.Min(CurrentStamina, maxStamina);
             OnStaminaChanged?.Invoke(CurrentStamina, maxStamina);
         }
 
+        /// <summary>Множитель от нагрузки экипировки (EncumbranceController). Множитель от характеристик хранится отдельно.</summary>
         public void SetCostMultiplier(float multiplier)
         {
-            CostMultiplier = Mathf.Max(0f, multiplier);
+            _loadCostMultiplier = Mathf.Max(0f, multiplier);
         }
     }
 }
