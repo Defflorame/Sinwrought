@@ -25,7 +25,7 @@ namespace Game.Player
         public event Action OnCastPressed;
         public event Action OnCastReleased;
         public event Action<int> OnSwitchRing;
-
+        public event Action OnInteractPressed;
         private InputAction _moveAction;
         private InputAction _lookAction;
         private InputAction _attackAction;
@@ -35,6 +35,8 @@ namespace Game.Player
         private InputAction _switchWeaponAction;
         private InputAction _castAction;
         private InputAction _switchRingAction;
+        private InputAction _interactAction;
+
 
         private void Awake()
         {
@@ -49,6 +51,8 @@ namespace Game.Player
             _switchWeaponAction = playerMap.FindAction("SwitchWeapon", throwIfNotFound: true);
             _castAction = playerMap.FindAction("Cast", throwIfNotFound: true);
             _switchRingAction = playerMap.FindAction("SwitchRing", throwIfNotFound: true);
+            _interactAction = playerMap.FindAction("Interact", throwIfNotFound: true);
+
 
             // Cursor.visible = false;
             // Cursor.lockState = CursorLockMode.Locked;
@@ -66,6 +70,7 @@ namespace Game.Player
             _castAction.started += HandleCastPressed;
             _castAction.canceled += HandleCastReleased;
             _switchRingAction.performed += HandleSwitchRing;
+            _interactAction.started += HandleInteractPressed;
         }
 
         private void OnDisable()
@@ -80,6 +85,7 @@ namespace Game.Player
             _castAction.started -= HandleCastPressed;
             _castAction.canceled -= HandleCastReleased;
             _switchRingAction.performed -= HandleSwitchRing;
+            _interactAction.started -= HandleInteractPressed;
         }
 
         private void Update()
@@ -105,5 +111,6 @@ namespace Game.Player
 
             OnSwitchRing?.Invoke(scroll > 0f ? 1 : -1);
         }
+        private void HandleInteractPressed(InputAction.CallbackContext ctx) => OnInteractPressed?.Invoke();
     }
 }

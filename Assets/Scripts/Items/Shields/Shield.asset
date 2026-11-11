@@ -17,6 +17,8 @@ MonoBehaviour:
   description: 
   weight: 23
   maxStackSize: 1
-  blockEfficiency: 0.41
+  blockEfficiency: 0.389
+  magicBlockEfficiency: 0.4
+  blockStaggerMultiplier: 1
   prefab: {fileID: 32879835385672104, guid: 51160b3dc97e04d48a2f8818d176586b, type: 3}
   animatorOverride: {fileID: 22100000, guid: 8be5e3ce32a039c4face168f238e3f9b, type: 2}

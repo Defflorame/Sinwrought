@@ -1,0 +1,59 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d923d9ae10e8ab0438633837d88b0030, type: 3}
+  m_Name: RangedEnemyData
+  m_EditorClassIdentifier: Assembly-CSharp::Game.Enemies.EnemyData
+  enemyName: MeleeEnemy
+  designNotes: 
+  baseStats: {fileID: 11400000, guid: 76112336e4ab159468f3d3cdcee06be4, type: 2}
+  resistanceProfile: {fileID: 11400000, guid: 31d5fa43634f20d46b7f4c4fcfb1ff4a, type: 2}
+  reward: {fileID: 11400000, guid: 687c949c8568f4246add3d7cc61b481f, type: 2}
+  weapon: {fileID: 0}
+  attacks:
+  - label: 
+    attack: {fileID: 0}
+    spell: {fileID: 11400000, guid: b77c2ed5584f7b847811410680f32dfb, type: 2}
+    minRange: 0
+    maxRange: 0
+    cooldown: 2
+    weight: 5
+  engageDistance: 0
+  postAttackDelayMin: 1
+  postAttackDelayMax: 3
+  patrolSpeedMultiplier: 0.5
+  investigateSpeedMultiplier: 0.7
+  chaseSpeedMultiplier: 1
+  turnSpeed: 180
+  hoverHeight: 0
+  sightRange: 15
+  fieldOfView: 110
+  sideRangeMultiplier: 0.6
+  rearRangeMultiplier: 0.15
+  closeAwarenessRadius: 2
+  reactionTime: 0.25
+  loseTargetDelay: 4
+  hearingSensitivity: 1
+  patrolRadius: 30
+  idleTimeMin: 2
+  idleTimeMax: 5
+  patrolWaitMin: 2
+  patrolWaitMax: 5
+  lookAroundDuration: 3
+  lookAroundAngle: 30
+  immuneToStagger: 0
+  maxPoise: 30
+  poiseResetDelay: 3
+  attackingPoiseMultiplier: 2
+  staggerDuration: 1
+  parryStaggerDuration: 1.5
+  corpsePrefab: {fileID: 0}
+  corpseLifetime: 10

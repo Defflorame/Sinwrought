@@ -10,6 +10,8 @@ namespace Game.Combat
     [RequireComponent(typeof(Collider))]
     public class WeaponHitbox : MonoBehaviour
     {
+        [Tooltip("Слои целей, по которым это оружие наносит урон. Игрок: Enemy. Враг: Player. Слой с разрушаемыми предметами добавляйте сюда же. По умолчанию — все слои (как раньше).")]
+        [SerializeField] private LayerMask hostileLayers = ~0;
         private Collider _collider;
         private GameObject _owner;
         private Stats.CharacterStats _ownerStats;
@@ -88,6 +90,7 @@ namespace Game.Combat
         private void OnTriggerEnter(Collider other)
         {
             if (!_isActive || _currentAttack == null) return;
+            if (!hostileLayers.Contains(other.gameObject.layer)) return;
 
             DamageReceiver receiver = other.GetComponentInParent<DamageReceiver>();
             if (receiver == null) return;

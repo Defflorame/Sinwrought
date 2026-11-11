@@ -23,6 +23,8 @@ namespace Game.Player.Stats
         public float CarryWeightLimit { get; }
         public float StaminaCostMultiplier { get; }
         public float CastSpeedMultiplier { get; }
+        public float MaxPoise { get; }
+
 
         public DerivedCharacterStats(
             int maxHealth,
@@ -35,7 +37,9 @@ namespace Game.Player.Stats
             float movementSpeed,
             float carryWeightLimit,
             float staminaCostMultiplier = 1f,
-            float castSpeedMultiplier = 1f)
+            float castSpeedMultiplier = 1f,
+            float maxPoise = 0f)
+
         {
             MaxHealth = maxHealth;
             MaxStamina = maxStamina;
@@ -48,6 +52,7 @@ namespace Game.Player.Stats
             CarryWeightLimit = carryWeightLimit;
             StaminaCostMultiplier = staminaCostMultiplier;
             CastSpeedMultiplier = castSpeedMultiplier;
+            MaxPoise = maxPoise;
         }
     }
 }

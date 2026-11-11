@@ -18,10 +18,9 @@ namespace Game.Combat
         [SerializeField] private StaminaComponent stamina;
         [Tooltip("Сколько стамины стоит каждая единица урона, поглощённого щитом.")]
         [SerializeField] private float staminaPerAbsorbedDamage = 0.5f;
-
         private float _physicalEfficiency;
         private float _magicEfficiency;
-
+        private float _staggerMultiplier = 1f;
         public bool IsBlocking { get; private set; }
 
         /// <summary>shield может быть null только если блок был начат без щита — вызывающий код (PlayerCombatController) не должен этого допускать.</summary>
@@ -29,6 +28,7 @@ namespace Game.Combat
         {
             _physicalEfficiency = shield != null ? shield.blockEfficiency : 0f;
             _magicEfficiency = shield != null ? shield.magicBlockEfficiency : 0f;
+            _staggerMultiplier = shield != null ? shield.blockStaggerMultiplier : 1f;
             IsBlocking = true;
             Debug.Log($"BlockResolver: блок начат (physical {_physicalEfficiency:F2}, magic {_magicEfficiency:F2})");
         }
@@ -39,8 +39,9 @@ namespace Game.Combat
             Debug.Log("BlockResolver: блок закончен");
         }
 
-        public int ResolveBlockedDamage(int baseDamage, DamageKind kind = DamageKind.Physical)
+        public int ResolveBlockedDamage(int baseDamage, DamageKind kind, out float staggerMultiplier)
         {
+            staggerMultiplier = _staggerMultiplier;
             if (baseDamage <= 0) return 0;
 
             float shieldEfficiency = kind == DamageKind.Magic ? _magicEfficiency : _physicalEfficiency;
@@ -54,6 +55,7 @@ namespace Game.Combat
             if (stamina != null && !stamina.TryConsume(absorbed * staminaPerAbsorbedDamage))
             {
                 Debug.Log("BlockResolver: не хватило stamina — гард пробит, урон проходит полностью");
+                staggerMultiplier = 1f;
                 return baseDamage;
             }
 

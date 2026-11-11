@@ -81,6 +81,7 @@ namespace Game.Stats
             float magicDamage = ApplyModifiers(StatType.MagicDamage, baseStats.magicDamage);
             float speed = ApplyModifiers(StatType.Speed, baseStats.speed);
             float carryWeight = ApplyModifiers(StatType.CarryWeight, baseStats.carryWeight);
+            float maxPoise = ApplyModifiers(StatType.Poise, baseStats.poise);
 
             float defenseStat = ApplyModifiers(StatType.Defense, baseStats.defense);
             float defenseValue = defenseStat * baseStats.damageReductionPerDefensePoint;
@@ -97,7 +98,8 @@ namespace Game.Stats
                 carryWeightLimit: Mathf.Max(0f, carryWeight),
                 // Нижняя граница 0.1: иначе большие бонусы сделают действия бесплатными или каст бесконечно быстрым/медленным.
                 staminaCostMultiplier: Mathf.Max(0.1f, staminaCostMultiplier),
-                castSpeedMultiplier: Mathf.Max(0.1f, castSpeedMultiplier));
+                castSpeedMultiplier: Mathf.Max(0.1f, castSpeedMultiplier),
+                maxPoise: Mathf.Max(0f, maxPoise)); 
             Debug.Log($"CharacterStats: recalculated -> HP {Stats.MaxHealth}, Strength {strength:F1}, Stamina {Stats.MaxStamina:F1} (regen {Stats.StaminaRegenPerSecond:F1}/s, cost x{Stats.StaminaCostMultiplier:F2}), " +
       $"Mana {Stats.MaxMana:F1}, PhysicalDamageBonus {Stats.PhysicalDamageBonusPercent:F1}%, MagicDamage {Stats.MagicDamage:F1}, CastSpeed x{Stats.CastSpeedMultiplier:F2}, " +
       $"Defense {Stats.DefenseValue:F1}, Speed {Stats.MovementSpeed:F1}, CarryWeight {Stats.CarryWeightLimit:F1}");
