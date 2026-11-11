@@ -15,7 +15,7 @@ namespace Game.Magic
         [Tooltip("Откуда вылетают эффекты и куда смотрит прицел — обычно камера игрока.")]
         [SerializeField] private Transform castOrigin;
         [SerializeField] private CharacterStats characterStats;
-        [Tooltip("Слои, которые считаются целью при прицеливании (хитскан, зоны) и областью поражения (взрывы).")]
+        [Tooltip("Слои, с которыми взаимодействуют заклинания этого заклинателя: прицел (хитскан, зоны), попадание снаряда и область взрыва. Должны входить окружение (Default) и враждебная сторона. Игрок: Default + Enemy. Враг: Default + Player.")]
         [SerializeField] private LayerMask aimMask = ~0;
 
         /// <summary>

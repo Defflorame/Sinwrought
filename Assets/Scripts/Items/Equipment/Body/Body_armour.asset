@@ -22,6 +22,9 @@ MonoBehaviour:
   - stat: 1
     type: 0
     value: 15
+  - stat: 11
+    type: 0
+    value: 15
   handPrefab: {fileID: 0}
   elementResistances:
   - element: {fileID: 11400000, guid: 59d6a86a28556744b8b159cd39db719e, type: 2}

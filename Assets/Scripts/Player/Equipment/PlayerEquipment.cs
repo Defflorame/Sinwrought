@@ -98,6 +98,7 @@ namespace Game.Player.Equipment
             EquipmentModifierService.RemoveItemModifiers(characterStats, item);
             EquipmentModifierService.RemoveItemResistances(resistanceModifiers, item);  // новая
             inventory.AddItem(item);
+            OnEquipmentChanged?.Invoke();
             return true;
         }
 

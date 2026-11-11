@@ -16,11 +16,9 @@ namespace Game.Player
     /// Exit() отменяет заряд бесплатно. Ходить можно во всех фазах, замедления нет.
     /// Время идёт через Tick, без корутин.
     ///
-    /// TODO Phase 8: прерывание заряда полученным ударом не реализовано —
-    /// DamageReceiver.ReceiveStagger пока пустой. В Phase 8 решить, прерывать ли заряд
-    /// только сильными ударами (по порогу staggerPower), чтобы сложность оставалась
-    /// между Lunacid и King's Field. Прерывать достаточно переходом в FreeState:
-    /// Exit() сам отменит заряд без трат.
+    /// Время идёт через Tick, без корутин.
+    /// Оглушение (сломанный poise) прерывает заряд: PlayerCombatController.TryStagger
+    /// уводит состояние, а Exit() отменяет заряд без трат.
     /// </summary>
     public class CastState : IPlayerActionState
     {

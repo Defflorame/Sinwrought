@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Game.Items.AttackData
   attackType: 0
   damage: 12
+  elementalMultiplier: 1
   startupDuration: 0.15
   activeDuration: 0.15
   recoveryDuration: 0.2
@@ -21,7 +22,7 @@ MonoBehaviour:
   canBeBlocked: 1
   canBeParried: 1
   parryWindow: 0.3
-  staggerPower: 10
+  staggerPower: 30
   maxChargeDamageMultiplier: 1
   maxChargeDuration: 1
   hitboxSize: {x: 1, y: 1, z: 2}

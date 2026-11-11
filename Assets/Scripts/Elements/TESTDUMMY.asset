@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51cd190ccd6946940abdcab42999fe03, type: 3}
   m_Name: TESTDUMMY
   m_EditorClassIdentifier: Assembly-CSharp::Game.Combat.ResistanceProfileData
-  magicResistance: 50
-  physicalResistance: 50
+  magicResistance: 10
+  physicalResistance: 10
   elements: []
   statuses: []

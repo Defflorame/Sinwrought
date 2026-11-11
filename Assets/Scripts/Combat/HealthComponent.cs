@@ -13,6 +13,11 @@ namespace Game.Combat
     /// </summary>
     public class HealthComponent : MonoBehaviour
     {
+        /// Если назначен CharacterStats — maxHealth берётся из характеристик и
+        /// обновляется при их изменении (подписка на OnStatsChanged). Значение
+        /// maxHealth из инспектора используется только без CharacterStats (манекены);
+        /// у игрока и врагов оно перезаписывается в Start.
+        [Tooltip("Только для объектов без CharacterStats (манекены). С CharacterStats игнорируется.")]
         [SerializeField] private int maxHealth = 100;
         [Tooltip("Необязательно. Если назначено — maxHealth задаётся характеристикой Strength.")]
         [SerializeField] private CharacterStats stats;

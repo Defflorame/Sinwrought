@@ -14,7 +14,7 @@ namespace Game.Player
         [SerializeField] private PlayerLook playerLook;
         [SerializeField] private PlayerCombatController combatController;
         [SerializeField] private HealthComponent healthComponent;
-
+        [SerializeField] private PlayerInteractor interactor;
         private bool _isEnabled;
 
         private void Awake()
@@ -36,6 +36,7 @@ namespace Game.Player
             inputReader.OnCastPressed += HandleCastPressed;
             inputReader.OnCastReleased += HandleCastReleased;
             inputReader.OnSwitchRing += HandleSwitchRing;
+            inputReader.OnInteractPressed += HandleInteractPressed;
             healthComponent.OnDeath += HandleDeath;
         }
 
@@ -53,6 +54,7 @@ namespace Game.Player
             inputReader.OnCastPressed -= HandleCastPressed;
             inputReader.OnCastReleased -= HandleCastReleased;
             inputReader.OnSwitchRing -= HandleSwitchRing;
+            inputReader.OnInteractPressed -= HandleInteractPressed;
             healthComponent.OnDeath -= HandleDeath;
         }
 
@@ -66,6 +68,7 @@ namespace Game.Player
             _isEnabled = true;
             playerMovement.SetMovementLocked(false);
             playerLook.SetLookEnabled(true);
+            interactor.SetInteractionEnabled(true);
         }
 
         public void DisablePlayer()
@@ -74,6 +77,7 @@ namespace Game.Player
             playerMovement.SetMovementLocked(true);
             playerLook.SetLookEnabled(false);
             playerMovement.StopMovement();
+            interactor.SetInteractionEnabled(false);
         }
 
         public void HandleDeath()
@@ -157,6 +161,12 @@ namespace Game.Player
         {
             if (!_isEnabled) return;
             combatController.SwitchRing(direction);
+        }
+        private void HandleInteractPressed()
+        {
+            if (!_isEnabled) return;
+            if (!combatController.CanPerformAction()) return;
+            interactor.TryInteract();
         }
     }
 }

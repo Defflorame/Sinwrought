@@ -31,6 +31,8 @@ namespace Game.Stats
         StaminaCost,
 
         /// <summary>Множитель скорости каста (база 1). Percent +20 = каст и восстановление после него на 20% быстрее.</summary>
-        CastSpeed
+        CastSpeed,
+        /// <summary>Запас устойчивости к оглушению. Flat — очки (броня +15), Percent — множитель всего запаса. Базу задаёт BaseCharacterStats.poise.</summary>
+        Poise
     }
 }

@@ -56,6 +56,7 @@ namespace Game.Magic
         {
             if (_hasHit || _data == null) return;
             if (SpellHitResolver.IsCaster(_caster, other)) return;
+            if (!_hitMask.Contains(other.gameObject.layer)) return;
 
             bool reactive = other.GetComponentInParent<DamageReceiver>() != null
                 || other.GetComponentInParent<SpellReceiver>() != null;

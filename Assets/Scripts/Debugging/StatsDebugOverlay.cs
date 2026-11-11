@@ -3,6 +3,7 @@ using Game.Combat;
 using Game.Player.Equipment;
 using Game.Player.Stats;
 using Game.Stats;
+using Game.Player;
 
 namespace Game.Debugging
 {
@@ -25,6 +26,8 @@ namespace Game.Debugging
         [SerializeField] private DamageReceiver damageReceiver;
         [Tooltip("Стихии, сопротивление которым показывать (Fire, Dark, Light, Poison...). Учитывает бонусы от экипировки.")]
         [SerializeField] private ElementType[] shownElements;
+        [SerializeField] private PlayerStaggerController staggerController;
+
 
         [Header("Окно")]
         [SerializeField] private float width = 300f;
@@ -54,6 +57,7 @@ namespace Game.Debugging
             if (health != null) GUILayout.Label($"HP: {health.CurrentHealth} / {s.MaxHealth}", header);
             if (stamina != null) GUILayout.Label($"Stamina: {stamina.CurrentStamina:F0} / {s.MaxStamina:F0}", label);
             if (mana != null) GUILayout.Label($"Mana: {mana.CurrentMana:F0} / {s.MaxMana:F0}", label);
+            if (staggerController != null) GUILayout.Label($"Stagger: {staggerController.Poise.Current}", label);
 
             GUILayout.Label($"Regen: {s.StaminaRegenPerSecond:F1}/s", header);
             if (stamina != null) GUILayout.Label($"Cost (итого с нагрузкой): x{stamina.CostMultiplier:F2}", label);

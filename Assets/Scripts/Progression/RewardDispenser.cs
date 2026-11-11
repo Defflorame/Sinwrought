@@ -4,12 +4,10 @@ using Game.Combat;
 namespace Game.Progression
 {
     /// <summary>
-    /// Висит на убиваемом объекте (манекен, позже враг). При смерти отдаёт награду
-    /// RewardReceiver'у игрока. Combat про Progression ничего не знает: мы только слушаем OnDeath.
+    /// При смерти отдаёт награду
+    /// RewardReceiver'у игрока. Только слушаем OnDeath.
     ///
-    /// TODO Phase 8: у врагов, создаваемых в рантайме, ссылку на RewardReceiver нельзя назначить
-    /// в инспекторе префаба — её передаст спавнер/EnemyController при создании врага.
-    /// </summary>
+
     [RequireComponent(typeof(HealthComponent))]
     public class RewardDispenser : MonoBehaviour
     {
@@ -42,6 +40,11 @@ namespace Game.Progression
             }
 
             receiver.Grant(reward);
+        }
+        public void Configure(RewardData newReward, RewardReceiver newReceiver)
+        {
+            if (newReward != null) reward = newReward;
+            if (newReceiver != null) receiver = newReceiver;
         }
     }
 }

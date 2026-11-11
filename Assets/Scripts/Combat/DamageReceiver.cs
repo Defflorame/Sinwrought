@@ -1,6 +1,6 @@
 using UnityEngine;
 using Game.Stats;
-using System.Collections.Generic;
+using System;
 
 namespace Game.Combat
 {
@@ -27,7 +27,9 @@ namespace Game.Combat
         public CharacterStats CharacterStats => characterStats;
         public ResistanceProfileData Resistance => resistanceProfile;
         public HealthComponent Health => _health;
-
+        public event Action<float> OnStaggerReceived;
+        public event Action OnParried;
+        public event Action<DamagePacket> OnDamaged;
         private void Awake()
         {
             _health = GetComponent<HealthComponent>();
@@ -53,41 +55,40 @@ namespace Game.Combat
             }
 
             int finalDamage = baseDamage;
+            float staggerMultiplier = 1f;
 
             if (packet.IsBlockable && blockResolver != null && blockResolver.IsBlocking)
             {
-                finalDamage = blockResolver.ResolveBlockedDamage(baseDamage, packet.Kind);
+                finalDamage = blockResolver.ResolveBlockedDamage(baseDamage, packet.Kind, out staggerMultiplier);
                 Debug.Log($"{name}: блокировал часть урона ({packet.Kind}). Должно {baseDamage} -> нанесено {finalDamage}");
             }
 
             if (finalDamage > 0)
             {
                 _health.TakeDamage(finalDamage);
-                // Эффекты накладываются, только если хоть какой-то урон прошёл:
-                // полностью заблокированный или спарированный удар их не вешает.
+                OnDamaged?.Invoke(packet);
                 StatusEffectResolver.ResolveOnHit(packet.OnHitEffects, statusEffects, resistanceProfile);
             }
 
-            if (packet.AttackData != null && packet.AttackData.staggerPower > 0f)
+            if (packet.AttackData != null)
             {
-                ReceiveStagger(packet.AttackData.staggerPower);
+                float staggerPower = packet.AttackData.staggerPower * staggerMultiplier;
+                if (staggerPower > 0f) ReceiveStagger(staggerPower);
             }
         }
 
         /// <summary>
-        /// Стаггер от полученного удара. Реальная игровая реакция
-        /// (прерывание анимации, StaggerState) появится вместе
-        /// с Enemy AI (Phase 8) / Player Stagger (по необходимости).
+        /// Стаггер от полученного удара.
         /// </summary>
         public void ReceiveStagger(float staggerPower)
         {
-            // Debug.Log($"{name}: received stagger {staggerPower:F1} (пока без игровой реакции)");
+            OnStaggerReceived?.Invoke(staggerPower);
         }
 
-        /// <summary>Вызывается, когда именно ЭТОТ объект был атакующим и его атаку парировали.</summary>
         public void ReceiveParry()
         {
             Debug.Log($"{name}: ReceiveParry() — атака этого объекта была парирована.");
+            OnParried?.Invoke();
         }
 
         public void ReceiveKnockback(Vector3 direction, float force)

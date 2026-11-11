@@ -44,6 +44,7 @@ namespace Game.Player
         private DodgeState _dodgeState;
         private ParryState _parryState;
         private CastState _castState;
+        private StaggerState _staggerState;
 
         private bool _attackButtonHeld;
         private float _attackPressTime;
@@ -58,6 +59,8 @@ namespace Game.Player
             _dodgeState = new DodgeState(playerMovement, combatLoadout, dodgeDuration, ReturnToFree);
             _parryState = new ParryState(parryResolver, ReturnToFree);
             _castState = new CastState(spellCaster, ringSpellController, ReturnToFree);
+            _staggerState = new StaggerState(playerMovement, ReturnToFree);
+
         }
 
         private void Start()
@@ -276,7 +279,7 @@ namespace Game.Player
             return stamina == null || stamina.TryConsume(baseCost);
         }
 
-        /// <summary>Оборвать всё, что игрок делает сейчас (смерть, позже — оглушение).</summary>
+        /// <summary>Оборвать всё, что игрок делает сейчас (смерть, оглушение).</summary>
         public void CancelAllActions()
         {
             _attackButtonHeld = false;
@@ -287,6 +290,19 @@ namespace Game.Player
             {
                 stateMachine.ChangeState(_freeState); // Cast / Block / Dodge / Parry / Charge
             }
+        }
+        /// <summary>
+        /// Оглушение игрока: обрывает атаку, заряд, каст, блок и парирование, затем держит
+        /// StaggerState duration секунд. false — игрок в отскоке (Dodge), оглушение игнорируется.
+        /// </summary>
+        public bool TryStagger(float duration)
+        {
+            if (stateMachine.CurrentState == _dodgeState) return false;
+
+            CancelAllActions();
+            _staggerState.SetDuration(duration);
+            stateMachine.ChangeState(_staggerState);
+            return true;
         }
     }
 }
