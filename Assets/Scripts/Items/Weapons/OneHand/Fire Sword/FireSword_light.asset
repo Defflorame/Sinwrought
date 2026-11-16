@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: FireSword_light
   m_EditorClassIdentifier: Assembly-CSharp::Game.Items.AttackData
   attackType: 0
-  damage: 11
+  damage: 100
   elementalMultiplier: 1
   startupDuration: 0.15
   activeDuration: 0.15

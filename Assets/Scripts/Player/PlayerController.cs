@@ -38,6 +38,7 @@ namespace Game.Player
             inputReader.OnSwitchRing += HandleSwitchRing;
             inputReader.OnInteractPressed += HandleInteractPressed;
             healthComponent.OnDeath += HandleDeath;
+            inputReader.OnQuickSlotPressed += HandleQuickSlotPressed;
         }
 
         private void OnDisable()
@@ -56,6 +57,7 @@ namespace Game.Player
             inputReader.OnSwitchRing -= HandleSwitchRing;
             inputReader.OnInteractPressed -= HandleInteractPressed;
             healthComponent.OnDeath -= HandleDeath;
+            inputReader.OnQuickSlotPressed -= HandleQuickSlotPressed;
         }
 
         public void Initialize()
@@ -86,9 +88,21 @@ namespace Game.Player
             DisablePlayer();
         }
 
+        /// <summary>
+        /// Воскрешает игрока на месте: здоровье, выносливость и мана до максимума,
+        /// сброс боевого состояния, возврат управления. Перенос в другую точку — отдельная функция.
+        /// </summary>
         public void HandleRespawn()
         {
+            VitalsRestoreService.RestoreAll(gameObject);
+            combatController.CancelAllActions();
             EnablePlayer();
+        }
+        /// <summary>Переносит игрока в точку и выравнивает взгляд по её направлению (pitch камеры сбрасывается).</summary>
+        public void TeleportTo(Vector3 position, Quaternion rotation)
+        {
+            playerMovement.TeleportTo(position, rotation);
+            playerLook.ResetView();
         }
 
         private void HandleMove(Vector2 input)
@@ -162,11 +176,17 @@ namespace Game.Player
             if (!_isEnabled) return;
             combatController.SwitchRing(direction);
         }
+
         private void HandleInteractPressed()
         {
             if (!_isEnabled) return;
             if (!combatController.CanPerformAction()) return;
             interactor.TryInteract();
+        }
+        private void HandleQuickSlotPressed(int index)
+        {
+            if (!_isEnabled) return;
+            combatController.TryUseQuickSlot(index);
         }
     }
 }

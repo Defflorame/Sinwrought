@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Game.Combat;
 using Game.Stats;
+using Game.Save;
 
 namespace Game.Progression
 {
@@ -13,7 +14,7 @@ namespace Game.Progression
     /// Очки способностей выдаёт AbilityPointController, слушая OnLevelChanged.
     /// Также применяет к игроку стартовые данные текущего класса.
     /// </summary>
-    public class ProgressionSystem : MonoBehaviour
+    public class ProgressionSystem : MonoBehaviour, ISaveable
     {
         [SerializeField] private CharacterClassData characterClass;
         [SerializeField] private ProgressionResourceWallet resourceWallet;
@@ -42,6 +43,27 @@ namespace Game.Progression
         /// <summary>Изменилось число нераспределённых очков характеристик или их распределение.</summary>
         public event Action OnStatPointsChanged;
 
+        [SerializeField] private CharacterClassCatalogData classCatalog;
+        /// <summary>Состояние заменено из сохранения (уровень, очки, класс). UI обновляется по нему.</summary>
+        public event Action OnRestored;
+        public string SaveKey => "progression";
+        public int RestoreOrder => 41;
+
+        [Serializable]
+        private class StatAllocationData
+        {
+            public StatType stat;
+            public int points;
+        }
+
+        [Serializable]
+        private class ProgressionSaveData
+        {
+            public string classId;
+            public int level;
+            public int unspentStatPoints;
+            public List<StatAllocationData> allocations = new List<StatAllocationData>();
+        }
         private void Awake()
         {
             if (characterClass == null)
@@ -132,6 +154,67 @@ namespace Game.Progression
             }
 
             _isLevelingUp = false;
+        }
+
+        public string Capture()
+        {
+            var data = new ProgressionSaveData
+            {
+                classId = characterClass != null ? characterClass.Id : "",
+                level = Level,
+                unspentStatPoints = UnspentStatPoints
+            };
+
+            foreach (KeyValuePair<StatType, int> entry in _allocated)
+            {
+                data.allocations.Add(new StatAllocationData { stat = entry.Key, points = entry.Value });
+            }
+
+            return JsonUtility.ToJson(data);
+        }
+
+        /// <summary>
+        /// Заменяет состояние прогрессии. Не тратит очки и не требует открытого gate.
+        /// Модификаторы очков пересоздаются с нуля, поэтому повторный вызов не накапливает бонусы.
+        /// </summary>
+        public void Restore(string json)
+        {
+            ProgressionSaveData data = JsonUtility.FromJson<ProgressionSaveData>(json);
+            if (data == null) return;
+
+            if (classCatalog != null && classCatalog.TryGet(data.classId, out CharacterClassData savedClass))
+            {
+                characterClass = savedClass;
+            }
+            else
+            {
+                Debug.LogWarning($"ProgressionSystem: класс '{data.classId}' не найден в каталоге, остаётся текущий.", this);
+            }
+
+            if (characterClass == null) return;
+
+            characterStats.RemoveModifiersFromSource(this);
+            ApplyClass();
+
+            Level = Mathf.Max(1, data.level);
+            UnspentStatPoints = Mathf.Max(0, data.unspentStatPoints);
+            _allocated.Clear();
+
+            foreach (StatAllocationData entry in data.allocations)
+            {
+                StatPointRule rule = Rules != null ? Rules.FindStatRule(entry.stat) : null;
+                if (rule == null || entry.points <= 0)
+                {
+                    Debug.LogWarning($"ProgressionSystem: для характеристики {entry.stat} нет правила в классе, очки пропущены.", this);
+                    continue;
+                }
+
+                _allocated[entry.stat] = entry.points;
+                characterStats.AddModifier(new StatModifier(entry.stat, StatModifierType.Flat, rule.valuePerPoint * entry.points, this));
+            }
+
+            OnStatPointsChanged?.Invoke();
+            OnRestored?.Invoke();
         }
     }
 }

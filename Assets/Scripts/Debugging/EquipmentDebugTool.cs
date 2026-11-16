@@ -3,6 +3,7 @@ using UnityEngine;
 using Game.Items;
 using Game.Player.Equipment;
 using Game.Combat;
+using Game.Player;
 
 namespace Game.Debugging
 {
@@ -23,6 +24,8 @@ namespace Game.Debugging
         [SerializeField] private Inventory inventory;
         [SerializeField] private PlayerEquipment playerEquipment;
         [SerializeField] private CombatLoadout combatLoadout;
+        [SerializeField] private QuickSlotController quickSlots;
+
 
         [Header("Тестовые предметы (любое количество, любых типов)")]
         [SerializeField] private ItemData[] testItems;
@@ -48,10 +51,23 @@ namespace Game.Debugging
             {
                 AddAllTestItemsToInventory();
             }
+            GUILayout.Space(6);
+            GUILayout.Label("Быстрые слоты", header);
+            GUILayout.BeginHorizontal();
+            for (int i = 0; i < QuickSlotController.SlotCount; i++)
+            {
+                ConsumableData slotData = quickSlots.GetSlot(i);
+                string slotText = slotData != null ? $"{i + 1}: {slotData.itemName} x{quickSlots.GetCount(i)}" : $"{i + 1}: -";
+                GUILayout.Label(slotText, small, GUILayout.Width(120));
+                GUI.enabled = slotData != null;
+                if (GUILayout.Button("x", GUILayout.Width(22))) quickSlots.Clear(i);
+                GUI.enabled = true;
+            }
+            GUILayout.EndHorizontal();
 
-            GUILayout.Space(10);
+            GUILayout.Space(6);
             GUILayout.Label("Инвентарь", header);
-            _inventoryScroll = GUILayout.BeginScrollView(_inventoryScroll, GUILayout.Height(320));
+            _inventoryScroll = GUILayout.BeginScrollView(_inventoryScroll, GUILayout.Height(270));
 
             foreach (ItemStack stack in new List<ItemStack>(inventory.GetAllItems()))
             {
@@ -196,6 +212,15 @@ namespace Game.Debugging
                     if (GUILayout.Button("→ Ring", GUILayout.Width(100)))
                     {
                         playerEquipment.EquipRing(item);
+                    }
+                    break;
+                case ConsumableData consumable:
+                    for (int i = 0; i < QuickSlotController.SlotCount; i++)
+                    {
+                        if (GUILayout.Button($"→ {i + 1}", GUILayout.Width(44)))
+                        {
+                            quickSlots.TryAssign(i, consumable);
+                        }
                     }
                     break;
             }

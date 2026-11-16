@@ -4,5 +4,8 @@ namespace Game.Progression
     /// Накопленный опыт (ресурс прокачки): приходит за убийства, автоматически
     /// тратится ProgressionSystem на повышение уровня. С валютой не смешивается.
     /// </summary>
-    public class ProgressionResourceWallet : Wallet { }
+    public class ProgressionResourceWallet : Wallet
+    {
+        public override string SaveKey => "experience";
+    }
 }

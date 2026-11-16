@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 38e8906ae5d5f3e428f508efff2f8fa4, type: 3}
+  m_Name: SampleScene_AD_2
+  m_EditorClassIdentifier: Assembly-CSharp::Game.Altars.AltarData
+  id: 13472fd2eead4084aa93c5e9bbee3684
+  altarName: SampleScene2
+  location: {fileID: 11400000, guid: 793513cbc85f62b4ea1b8975914b42e1, type: 2}
+  spawnPoint: {fileID: 11400000, guid: b684a081f6264a24da041b90376fdcca, type: 2}
+  fastTravelRequirements: []

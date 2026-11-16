@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Fireball Projectile
   m_EditorClassIdentifier: Assembly-CSharp::Game.Magic.ProjectileEffectData
   projectilePrefab: {fileID: 2540261125001841266, guid: c2475b605211ff042b69a5a5802eebf5, type: 3}
-  damage: 20
+  damage: 25
   speed: 30
   lifetime: 5
   explosionRadius: 3

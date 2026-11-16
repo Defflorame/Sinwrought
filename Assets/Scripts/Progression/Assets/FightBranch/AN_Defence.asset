@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48a1d73cd69808647992d45a482ff6a4, type: 3}
   m_Name: AN_Defence
   m_EditorClassIdentifier: Assembly-CSharp::Game.Progression.AbilityNodeData
+  id: 87c3b53023474a541a992ec8ec0b03f9
   abilityName: Defence
   description: 
   icon: {fileID: 0}

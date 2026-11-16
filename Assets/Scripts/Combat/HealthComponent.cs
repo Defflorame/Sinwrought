@@ -6,7 +6,7 @@ using Game.Stats;
 namespace Game.Combat
 {
     /// <summary>
-    /// Здоровье: получение урона, лечение, трата HP как ресурса, смерть.
+    /// Здоровье: получение урона, лечение, трата HP как ресурса, смерть, воскрешение.
     /// Если назначен CharacterStats — maxHealth берётся из характеристик и
     /// обновляется при их изменении (подписка на OnStatsChanged). Без него
     /// (манекены, враги) используется значение из инспектора.
@@ -62,7 +62,6 @@ namespace Game.Combat
             CurrentHealth = Mathf.Max(0, CurrentHealth - amount);
             OnDamageTaken?.Invoke(amount);
             OnHealthChanged?.Invoke(CurrentHealth, maxHealth);
-            Debug.Log($"HealthComponent: {gameObject.name} получил {amount} урона, текущее хп {CurrentHealth}");
 
             if (CurrentHealth <= 0)
             {
@@ -97,6 +96,19 @@ namespace Game.Combat
             _isDead = true;
             CurrentHealth = 0;
             OnDeath?.Invoke();
+        }
+
+        /// <summary>
+        /// Воскрешение: снимает состояние смерти и восстанавливает здоровье до максимума.
+        /// Для живого объекта ничего не делает (лечение — через Heal).
+        /// </summary>
+        public void Revive()
+        {
+            if (!_isDead) return;
+
+            _isDead = false;
+            CurrentHealth = maxHealth;
+            OnHealthChanged?.Invoke(CurrentHealth, maxHealth);
         }
 
         public bool IsDead() => _isDead;

@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1622471617683049704}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Point
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -40,7 +40,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4840364188514904374}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: PatrolPoints
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -80,7 +80,7 @@ GameObject:
   - component: {fileID: 648664467426111780}
   - component: {fileID: 5618092492446713326}
   - component: {fileID: 1349335331195965175}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Capsule
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -194,7 +194,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7176860346689437329}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Point (5)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -240,7 +240,8 @@ GameObject:
   - component: {fileID: 3470630930546501883}
   - component: {fileID: 2229168517654936790}
   - component: {fileID: 2758083061645884205}
-  m_Layer: 0
+  - component: {fileID: 4384522897069310199}
+  m_Layer: 7
   m_Name: RangedEnemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -480,6 +481,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Game.Progression.RewardDispenser
   reward: {fileID: 11400000, guid: 687c949c8568f4246add3d7cc61b481f, type: 2}
   receiver: {fileID: 0}
+  lootDropper: {fileID: 0}
 --- !u!114 &2229168517654936790
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -493,6 +495,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Game.Debugging.EnemyStateDebugLabel
   heightOffset: 2.4
+  fontSize: 22
+  showInGameView: 1
+  showInSceneView: 1
 --- !u!114 &2758083061645884205
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -510,6 +515,22 @@ MonoBehaviour:
   aimMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &4384522897069310199
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2761294758803580688}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 14fdb703dfee6e7499abaf309c9c8cb2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.World.LootDropper
+  lootPrefab: {fileID: 9095209469118820598, guid: 338c459594b9d954a870cd2de4babf70, type: 3}
+  spawnOffset: {x: 0, y: 0.8, z: 0}
+  horizontalSpeed: 1.5
+  upwardSpeed: 2.5
 --- !u!1 &4038584479617355682
 GameObject:
   m_ObjectHideFlags: 0
@@ -519,7 +540,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4949851634821587657}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Point (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -550,7 +571,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2454676293642393268}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Point (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -581,7 +602,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8533342751303222700}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Point (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -614,7 +635,7 @@ GameObject:
   - component: {fileID: 372787334903412799}
   - component: {fileID: 3386816468976713968}
   - component: {fileID: 1064557338611761125}
-  m_Layer: 2
+  m_Layer: 7
   m_Name: EnemyWeaponHitbox
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -669,6 +690,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c9f7da1184133d447a8e06954408d0a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Game.Combat.WeaponHitbox
+  hostileLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
 --- !u!1 &7007886538189484488
 GameObject:
   m_ObjectHideFlags: 0
@@ -678,7 +702,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5552155442851155905}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: CastOriginPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -709,7 +733,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2873409299954586102}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Point (4)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -740,7 +764,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6281556100801367999}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: RangedEnemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -773,7 +797,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5114854701980618861}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Eyes
   m_TagString: Untagged
   m_Icon: {fileID: 0}

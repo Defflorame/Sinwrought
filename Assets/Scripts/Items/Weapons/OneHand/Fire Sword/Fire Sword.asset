@@ -17,11 +17,11 @@ MonoBehaviour:
   description: Lol
   weight: 0
   maxStackSize: 1
-  lightAttack: {fileID: 11400000, guid: 572801964a886e24885039e03020cd1b, type: 2}
+  lightAttack: {fileID: 11400000, guid: afeb0e81570ca564dbbf25237998980d, type: 2}
   lightAttackFollowUps:
-  - {fileID: 11400000, guid: a1ae510b451c3764f83d1b46b5732de4, type: 2}
-  - {fileID: 11400000, guid: eaeef2e006223ec4b98d175941f5bbef, type: 2}
-  heavyAttack: {fileID: 11400000, guid: d07e7bccc3c751349911ac020d09bb0d, type: 2}
+  - {fileID: 11400000, guid: ff38c2be015ebf843a4ca8dece47dc08, type: 2}
+  - {fileID: 11400000, guid: eaf6d79a2b7728e4f96df0d21e570783, type: 2}
+  heavyAttack: {fileID: 11400000, guid: c52f37af1be44d74b89cda7b9a84e383, type: 2}
   element: {fileID: 11400000, guid: 59d6a86a28556744b8b159cd39db719e, type: 2}
   elementalDamage: 11
   onHitEffects:

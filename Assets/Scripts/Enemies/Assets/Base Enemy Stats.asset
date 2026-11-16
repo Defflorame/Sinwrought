@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Base Enemy Stats
   m_EditorClassIdentifier: Assembly-CSharp::Game.Player.Stats.BaseCharacterStats
   strength: 10
-  baseHealth: 140
+  baseHealth: 50
   healthPerStrengthPoint: 5
   physicalDamageBonusPerStrengthPoint: 1
   stamina: 0

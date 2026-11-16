@@ -23,7 +23,8 @@ GameObject:
   - component: {fileID: 4511108945867461929}
   - component: {fileID: 3591041550216413728}
   - component: {fileID: 7912103887270010141}
-  m_Layer: 0
+  - component: {fileID: 3925077241476472139}
+  m_Layer: 7
   m_Name: MeleeEnemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -257,6 +258,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Game.Progression.RewardDispenser
   reward: {fileID: 11400000, guid: 687c949c8568f4246add3d7cc61b481f, type: 2}
   receiver: {fileID: 0}
+  lootDropper: {fileID: 0}
 --- !u!114 &7912103887270010141
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -270,6 +272,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Game.Debugging.EnemyStateDebugLabel
   heightOffset: 2.4
+  fontSize: 22
+  showInGameView: 1
+  showInSceneView: 1
+--- !u!114 &3925077241476472139
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 230160205903352302}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 14fdb703dfee6e7499abaf309c9c8cb2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.World.LootDropper
+  lootPrefab: {fileID: 9095209469118820598, guid: 338c459594b9d954a870cd2de4babf70, type: 3}
+  spawnOffset: {x: 0, y: 0.8, z: 0}
+  horizontalSpeed: 1.5
+  upwardSpeed: 2.5
 --- !u!1 &620774022692710280
 GameObject:
   m_ObjectHideFlags: 0
@@ -279,7 +300,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2975621300397498640}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Eyes
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -313,7 +334,7 @@ GameObject:
   - component: {fileID: 4443022982398195446}
   - component: {fileID: 5079918393388588375}
   - component: {fileID: 5078816962639728929}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Capsule
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -428,7 +449,7 @@ GameObject:
   - component: {fileID: 4729023049044233188}
   - component: {fileID: 6636893748391316046}
   - component: {fileID: 823267197593967109}
-  m_Layer: 2
+  m_Layer: 7
   m_Name: EnemyWeaponHitbox
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -483,6 +504,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c9f7da1184133d447a8e06954408d0a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Game.Combat.WeaponHitbox
+  hostileLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
 --- !u!1 &6696814343456865288
 GameObject:
   m_ObjectHideFlags: 0
@@ -492,7 +516,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1813800417349676777}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: MeleeEnemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}

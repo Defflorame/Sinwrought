@@ -26,6 +26,8 @@ namespace Game.Player
         public event Action OnCastReleased;
         public event Action<int> OnSwitchRing;
         public event Action OnInteractPressed;
+        public event Action<int> OnQuickSlotPressed;
+
         private InputAction _moveAction;
         private InputAction _lookAction;
         private InputAction _attackAction;
@@ -36,7 +38,7 @@ namespace Game.Player
         private InputAction _castAction;
         private InputAction _switchRingAction;
         private InputAction _interactAction;
-
+        private InputAction[] _quickSlotActions;
 
         private void Awake()
         {
@@ -52,6 +54,12 @@ namespace Game.Player
             _castAction = playerMap.FindAction("Cast", throwIfNotFound: true);
             _switchRingAction = playerMap.FindAction("SwitchRing", throwIfNotFound: true);
             _interactAction = playerMap.FindAction("Interact", throwIfNotFound: true);
+            _quickSlotActions = new[]
+            {
+                playerMap.FindAction("QuickSlot1", throwIfNotFound: true),
+                playerMap.FindAction("QuickSlot2", throwIfNotFound: true),
+                playerMap.FindAction("QuickSlot3", throwIfNotFound: true)
+            };
 
 
             // Cursor.visible = false;
@@ -71,6 +79,7 @@ namespace Game.Player
             _castAction.canceled += HandleCastReleased;
             _switchRingAction.performed += HandleSwitchRing;
             _interactAction.started += HandleInteractPressed;
+            foreach (InputAction action in _quickSlotActions) action.started += HandleQuickSlotPressed;
         }
 
         private void OnDisable()
@@ -86,6 +95,7 @@ namespace Game.Player
             _castAction.canceled -= HandleCastReleased;
             _switchRingAction.performed -= HandleSwitchRing;
             _interactAction.started -= HandleInteractPressed;
+            foreach (InputAction action in _quickSlotActions) action.started -= HandleQuickSlotPressed;
         }
 
         private void Update()
@@ -112,5 +122,11 @@ namespace Game.Player
             OnSwitchRing?.Invoke(scroll > 0f ? 1 : -1);
         }
         private void HandleInteractPressed(InputAction.CallbackContext ctx) => OnInteractPressed?.Invoke();
+
+        private void HandleQuickSlotPressed(InputAction.CallbackContext ctx)
+        {
+            int index = System.Array.IndexOf(_quickSlotActions, ctx.action);
+            if (index >= 0) OnQuickSlotPressed?.Invoke(index);
+        }
     }
 }

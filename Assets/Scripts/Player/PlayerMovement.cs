@@ -130,6 +130,20 @@ namespace Game.Player
                 _currentInput = Vector2.zero;
             }
         }
+        /// <summary>
+        /// Мгновенный перенос игрока (вход в локацию, телепорт). CharacterController на время переноса
+        /// отключается, иначе он перезапишет позицию. Поворот берётся только по yaw (без наклона тела).
+        /// Накопленная скорость падения и ввод сбрасываются.
+        /// </summary>
+        public void TeleportTo(Vector3 position, Quaternion rotation)
+        {
+            _controller.enabled = false;
+            transform.SetPositionAndRotation(position, Quaternion.Euler(0f, rotation.eulerAngles.y, 0f));
+            _controller.enabled = true;
+
+            _verticalVelocity = 0f;
+            _currentInput = Vector2.zero;
+        }
 
         public void BeginDash(Vector3 worldDirection, float speed)
         {

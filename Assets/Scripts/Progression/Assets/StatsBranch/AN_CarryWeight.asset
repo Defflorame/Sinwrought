@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48a1d73cd69808647992d45a482ff6a4, type: 3}
   m_Name: AN_CarryWeight
   m_EditorClassIdentifier: Assembly-CSharp::Game.Progression.AbilityNodeData
+  id: 642814a6f93657141abdb2765aaee6b3
   abilityName: CarryWeight
   description: 
   icon: {fileID: 0}
