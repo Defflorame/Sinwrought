@@ -1,4 +1,5 @@
 using System;
+using Game.Save;
 using UnityEngine;
 
 namespace Game.Progression
@@ -7,14 +8,34 @@ namespace Game.Progression
     /// Очки способностей: выдаёт их за уровни по правилу класса (каждый N-й уровень)
     /// и тратит/возвращает по запросу AbilityTreeController. О дереве ничего не знает.
     /// </summary>
-    public class AbilityPointController : MonoBehaviour
+    public class AbilityPointController : MonoBehaviour, ISaveable
     {
+        [Serializable]
+        private class PointsSaveData
+        {
+            public int points;
+        }
         [SerializeField] private ProgressionSystem progression;
 
         public int AvailablePoints { get; private set; }
 
         public event Action<int> OnPointsChanged;
+        public string SaveKey => "abilityPoints";
+        public int RestoreOrder => 42;
 
+        public string Capture()
+        {
+            return JsonUtility.ToJson(new PointsSaveData { points = AvailablePoints });
+        }
+
+        public void Restore(string json)
+        {
+            PointsSaveData data = JsonUtility.FromJson<PointsSaveData>(json);
+            if (data == null) return;
+
+            AvailablePoints = Mathf.Max(0, data.points);
+            OnPointsChanged?.Invoke(AvailablePoints);
+        }
         private void OnEnable()
         {
             progression.OnLevelChanged += HandleLevelChanged;

@@ -1,4 +1,7 @@
 using UnityEngine;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 using Game.Combat;
 using Game.Stats;
 
@@ -11,6 +14,10 @@ namespace Game.Progression
     [CreateAssetMenu(fileName = "NewCharacterClass", menuName = "Game/Progression/Character Class Data")]
     public class CharacterClassData : ScriptableObject
     {
+        [SerializeField, HideInInspector] private string id;
+
+        /// <summary>Стабильный Id для сохранений (GUID ассета).</summary>
+        public string Id => id;
         public string className;
         [TextArea] public string description;
 
@@ -36,5 +43,18 @@ namespace Game.Progression
         {
             return level > 0 && level % abilityPointInterval == 0 ? abilityPointsPerInterval : 0;
         }
+
+#if UNITY_EDITOR
+        private void OnValidate()
+        {
+            string guid = AssetDatabase.AssetPathToGUID(AssetDatabase.GetAssetPath(this));
+            if (!string.IsNullOrEmpty(guid) && id != guid)
+            {
+                id = guid;
+                EditorUtility.SetDirty(this);
+            }
+        }
+#endif
+
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Game.Items;
 using Game.Player.Equipment;
+using Game.Save;
 
 namespace Game.Magic
 {
@@ -11,7 +12,7 @@ namespace Game.Magic
     /// переключает его. Количество колец не захардкожено — берётся из PlayerEquipment.
     /// Не кастует: за это отвечают CastState и SpellCaster.
     /// </summary>
-    public class RingSpellController : MonoBehaviour
+    public class RingSpellController : MonoBehaviour, ISaveable
     {
         [SerializeField] private PlayerEquipment playerEquipment;
 
@@ -22,6 +23,9 @@ namespace Game.Magic
 
         public ItemInstance ActiveRing => _spellRings.Count > 0 ? _spellRings[_activeIndex] : null;
         public SpellData ActiveSpell => (ActiveRing?.Data as RingData)?.Spell;
+
+        public string SaveKey => "activeRing";
+        public int RestoreOrder => 30;
 
         private void OnEnable()
         {
@@ -59,6 +63,23 @@ namespace Game.Magic
 
             int index = previous != null ? _spellRings.IndexOf(previous) : 0;
             _activeIndex = Mathf.Max(0, index);
+            OnActiveRingChanged?.Invoke();
+        }
+
+        [Serializable]
+        private class SaveData
+        {
+            public int activeIndex;
+        }
+
+        public string Capture() => JsonUtility.ToJson(new SaveData { activeIndex = _activeIndex });
+
+        public void Restore(string json)
+        {
+            SaveData data = JsonUtility.FromJson<SaveData>(json);
+            if (data == null || _spellRings.Count == 0) return;
+
+            _activeIndex = Mathf.Clamp(data.activeIndex, 0, _spellRings.Count - 1);
             OnActiveRingChanged?.Invoke();
         }
     }

@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48a1d73cd69808647992d45a482ff6a4, type: 3}
   m_Name: AN_Stamina
   m_EditorClassIdentifier: Assembly-CSharp::Game.Progression.AbilityNodeData
+  id: 6978aaaa6d01ee24a84b17707aee4462
   abilityName: Stamina
   description: 
   icon: {fileID: 0}

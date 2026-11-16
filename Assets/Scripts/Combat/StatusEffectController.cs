@@ -126,7 +126,8 @@ namespace Game.Combat
             }
         }
 
-        private void HandleDeath()
+        /// <summary>Снимает все эффекты (смерть, загрузка сохранения). Модификаторы характеристик снимаются.</summary>
+        public void ClearAll()
         {
             for (int i = _active.Count - 1; i >= 0; i--)
             {
@@ -134,6 +135,11 @@ namespace Game.Combat
             }
 
             enabled = false;
+        }
+
+        private void HandleDeath()
+        {
+            ClearAll();
         }
 
         private void RemoveAt(int index)

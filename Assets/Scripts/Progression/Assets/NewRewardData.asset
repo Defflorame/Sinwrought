@@ -12,5 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d66dd5eaa2be8964eb4de40877c1f9bc, type: 3}
   m_Name: NewRewardData
   m_EditorClassIdentifier: Assembly-CSharp::Game.Progression.RewardData
-  experience: 20
-  currency: 3
+  experienceMin: 10
+  experienceMax: 100
+  currencyMin: 3
+  currencyMax: 5
+  drops: {fileID: 11400000, guid: 0d81149544e14d74193553a1a8acc538, type: 2}

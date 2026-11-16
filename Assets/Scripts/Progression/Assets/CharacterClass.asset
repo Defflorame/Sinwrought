@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b86a1ead3796da64eaac3f7c3b35ef19, type: 3}
   m_Name: CharacterClass
   m_EditorClassIdentifier: Assembly-CSharp::Game.Progression.CharacterClassData
+  id: c8e7760193ece1c4690b91fd344dada5
   className: Mixed
   description: 
   baseStats: {fileID: 11400000, guid: 0fbdcb857b02de845838c0d4718db9d6, type: 2}

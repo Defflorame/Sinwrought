@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48a1d73cd69808647992d45a482ff6a4, type: 3}
   m_Name: AN_Strenght
   m_EditorClassIdentifier: Assembly-CSharp::Game.Progression.AbilityNodeData
+  id: 4b995503e882cf447a37588e3c5c3318
   abilityName: Strenght
   description: 
   icon: {fileID: 0}

@@ -36,12 +36,20 @@ namespace Game.Player
         {
             _uiMap.Disable();
             _playerMap.Enable();
+            SetCursorVisible(false);
         }
 
         public void SwitchToUI()
         {
             _playerMap.Disable();
             _uiMap.Enable();
+            SetCursorVisible(true);
+        }
+
+        private static void SetCursorVisible(bool visible)
+        {
+            Cursor.lockState = visible ? CursorLockMode.None : CursorLockMode.Locked;
+            Cursor.visible = visible;
         }
 
         public void DisableAllInput()

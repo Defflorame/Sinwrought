@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Game.Player;
+using Game.Altars;
 
 namespace Game.Debugging
 {
@@ -23,6 +24,9 @@ namespace Game.Debugging
         [Tooltip("false — Ctrl переключает режим по нажатию; true — режим активен, пока Ctrl удерживается.")]
         [SerializeField] private bool holdInsteadOfToggle = false;
 
+        [Tooltip("Необязательно. Пока идёт сессия алтаря, Ctrl игнорируется.")]
+        [SerializeField] private AltarSessionController altarSession;
+
         private bool _debugMode;
 
         private void Start()
@@ -42,6 +46,7 @@ namespace Game.Debugging
         {
             Keyboard keyboard = Keyboard.current;
             if (keyboard == null) return;
+            if (altarSession != null && altarSession.IsActive) return;
 
             if (holdInsteadOfToggle)
             {
@@ -60,9 +65,6 @@ namespace Game.Debugging
         private void ApplyDebugMode(bool enabled)
         {
             _debugMode = enabled;
-
-            Cursor.lockState = enabled ? CursorLockMode.None : CursorLockMode.Locked;
-            Cursor.visible = enabled;
 
             if (playerLook != null)
             {

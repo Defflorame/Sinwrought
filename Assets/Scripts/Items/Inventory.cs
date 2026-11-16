@@ -1,25 +1,31 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Game.Save;
 
 namespace Game.Items
 {
-    /// <summary>
-    /// Хранит предметы игрока. Лежит в Game.Items (а не Game.Player), чтобы
-    /// Equipment зависел от Items, а не от Player. Категории (Quest/Utility/Materials,
-    /// раздел 36) появятся вместе с соответствующими типами предметов.
-    /// Инварианты: стак никогда не больше maxStackSize; нестакающийся предмет —
-    /// всегда отдельный стак из одного ItemInstance.
-    /// </summary>
-    public class Inventory : MonoBehaviour
+    public class Inventory : MonoBehaviour, ISaveable
     {
+        [Tooltip("Нужен для восстановления предметов по Id из файла сохранения.")]
+        [SerializeField] private ItemCatalogData itemCatalog;
+
         private readonly List<ItemStack> _stacks = new List<ItemStack>();
 
         public event Action OnInventoryChanged;
 
+        public string SaveKey => "inventory";
+        public int RestoreOrder => 10;
+
         public void AddItem(ItemInstance item, int quantity = 1)
         {
-            if (item == null || item.Data == null || quantity <= 0) return;
+            if (AddToStacks(item, quantity)) OnInventoryChanged?.Invoke();
+        }
+
+        /// <summary>Раскладывает предмет по стакам без события. false — ничего не добавлено.</summary>
+        private bool AddToStacks(ItemInstance item, int quantity)
+        {
+            if (item == null || item.Data == null || quantity <= 0) return false;
 
             int maxStack = Mathf.Max(1, item.Data.maxStackSize);
 
@@ -39,8 +45,7 @@ namespace Game.Items
             }
 
             // 2. Остаток — новые стаки не больше maxStack. Для нестакающихся предметов
-            //    (maxStack == 1) каждая единица получает собственный ItemInstance:
-            //    у экземпляров будет своё состояние (уровень заточки и т.д.).
+            //    (maxStack == 1) каждая единица получает собственный ItemInstance.
             bool isFirstNewStack = true;
             while (quantity > 0)
             {
@@ -52,7 +57,7 @@ namespace Game.Items
                 isFirstNewStack = false;
             }
 
-            OnInventoryChanged?.Invoke();
+            return true;
         }
 
         /// <summary>
@@ -114,5 +119,65 @@ namespace Game.Items
         public ItemStack FindItem(ItemData data) => _stacks.Find(s => s.Item.Data == data);
 
         public IReadOnlyList<ItemStack> GetAllItems() => _stacks;
+        
+        [Serializable]
+        private class StackSave
+        {
+            public int itemId;
+            public int quantity;
+        }
+
+        [Serializable]
+        private class SaveData
+        {
+            public List<StackSave> stacks = new List<StackSave>();
+        }
+
+        public string Capture()
+        {
+            var data = new SaveData();
+
+            foreach (ItemStack stack in _stacks)
+            {
+                if (stack.Item.Data.Id == 0)
+                {
+                    Debug.LogWarning($"Inventory: у предмета '{stack.Item.Data.name}' нет Id, он не сохранён.", this);
+                    continue;
+                }
+
+                data.stacks.Add(new StackSave { itemId = stack.Item.Data.Id, quantity = stack.Quantity });
+            }
+
+            return JsonUtility.ToJson(data);
+        }
+
+        /// <summary>Заменяет содержимое рюкзака сохранённым. Предметы, которых нет в каталоге, пропускаются.</summary>
+        public void Restore(string json)
+        {
+            if (itemCatalog == null)
+            {
+                Debug.LogWarning("Inventory: не назначен каталог предметов, восстановление невозможно.", this);
+                return;
+            }
+
+            SaveData data = JsonUtility.FromJson<SaveData>(json);
+            if (data == null) return;
+
+            _stacks.Clear();
+
+            foreach (StackSave saved in data.stacks)
+            {
+                if (!itemCatalog.TryGet(saved.itemId, out ItemData itemData))
+                {
+                    Debug.LogWarning($"Inventory: предмет с Id {saved.itemId} не найден в каталоге.", this);
+                    continue;
+                }
+
+                AddToStacks(new ItemInstance(itemData), saved.quantity);
+            }
+
+            OnInventoryChanged?.Invoke();
+        }
     }
+
 }

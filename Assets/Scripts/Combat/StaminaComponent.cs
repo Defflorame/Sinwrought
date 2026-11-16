@@ -95,6 +95,13 @@ namespace Game.Combat
             OnStaminaChanged?.Invoke(CurrentStamina, maxStamina);
         }
 
+        /// <summary>Полное восстановление (отдых, респавн). Паузу регенерации не затрагивает.</summary>
+        public void RestoreToFull()
+        {
+            CurrentStamina = maxStamina;
+            OnStaminaChanged?.Invoke(CurrentStamina, maxStamina);
+        }
+
         public void StartRegeneration() => _regenEnabled = true;
 
         public void StopRegeneration() => _regenEnabled = false;

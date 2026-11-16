@@ -25,6 +25,7 @@ namespace Game.Player
 
         [Header("Equipment")]
         [SerializeField] private CombatLoadout combatLoadout;
+        [SerializeField] private QuickSlotController quickSlots;
 
         [Header("Attack tuning")]
         [Tooltip("Порог удержания ЛКМ: короче — Light Attack, дольше — начинается заряд (Heavy Attack).")]
@@ -236,6 +237,26 @@ namespace Game.Player
             }
 
             combatLoadout.TrySwitchActiveWeapon();
+        }
+        /// <summary>
+        /// Использование расходника из быстрого слота: мгновенное, состояние игрока не меняется.
+        /// Нельзя в недоступных для прерывания состояниях и во время заряда заклинания; блок не мешает.
+        /// </summary>
+        public void TryUseQuickSlot(int index)
+        {
+            if (!CanPerformAction())
+            {
+                Debug.Log("PlayerCombatController: расходник проигнорирован — текущее состояние не прерываемо");
+                return;
+            }
+
+            if (IsChargingSpell)
+            {
+                Debug.Log("PlayerCombatController: расходник недоступен во время заряда заклинания");
+                return;
+            }
+
+            quickSlots.TryUse(index);
         }
 
         public bool CanPerformAction()

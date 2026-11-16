@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48a1d73cd69808647992d45a482ff6a4, type: 3}
   m_Name: AN_Mana
   m_EditorClassIdentifier: Assembly-CSharp::Game.Progression.AbilityNodeData
+  id: b1e548d063673414ebef7f6d9d25848a
   abilityName: Mana
   description: 
   icon: {fileID: 0}

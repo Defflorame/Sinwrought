@@ -9,11 +9,6 @@ namespace Game.World
     /// двигает дверь GateTransformAnimator, подписанный на OnOpened/OnClosed. Кто открывает — не знает
     /// (GateInteractable, SpellGateOpener).
     /// Закрывается (по таймеру и вручную) только если в проходе никого нет.
-    ///
-    /// TODO Phase 11 (ОБЯЗАТЕЛЬНО): состояние двери, открытой ключом (closeDelay = 0), должно сохраняться при смене
-    /// локации и выходе из игры: PersistentId + WorldStateService и метод восстановления открытого состояния
-    /// БЕЗ проверки требований и без расхода ключа (и событие с флагом «мгновенно» для аниматора). До этого
-    /// момента перезагрузка сцены закрывает дверь, а ключ уже потрачен.
     /// </summary>
     public class WorldGate : MonoBehaviour
     {
@@ -39,8 +34,13 @@ namespace Game.World
 
         public bool IsOpen { get; private set; }
 
+        /// <summary>Закрывается сам по таймеру: такое состояние не сохраняется.</summary>
+        public bool AutoCloses => closeDelay > 0f;
         public event Action OnOpened;
         public event Action OnClosed;
+
+        /// <summary>Состояние выставлено мгновенно (загрузка). true — открыто. Это не открытие игроком: OnOpened/OnClosed не вызываются.</summary>
+        public event Action<bool> OnStateRestored;
 
         private Bounds _passageBounds;
         private bool _hasBounds;
@@ -94,6 +94,18 @@ namespace Game.World
             StopCloseRoutine();
             Close();
             return true;
+        }
+
+        /// <summary>
+        /// Мгновенно ставит состояние из сохранения: без проверки требований, без расхода ключа
+        /// и без OnOpened/OnClosed (иначе слушатели, например выдача награды, сработали бы повторно).
+        /// </summary>
+        public void RestoreState(bool open)
+        {
+            StopCloseRoutine();
+            IsOpen = open;
+            SetSolid(!open);
+            OnStateRestored?.Invoke(open);
         }
 
         private void Open()

@@ -1,4 +1,5 @@
 using System;
+using Game.Save;
 using UnityEngine;
 
 namespace Game.Progression
@@ -9,12 +10,35 @@ namespace Game.Progression
     /// отдельные типы, чтобы их нельзя было перепутать или объединить (раздел 47 документа).
     /// Сохранение (Phase 11) добавит сюда загрузку значения вместе с ISaveable.
     /// </summary>
-    public abstract class Wallet : MonoBehaviour
+    public abstract class Wallet : MonoBehaviour, ISaveable
     {
-        public int Amount { get; private set; }
+        [Serializable]
+        private class WalletSaveData
+        {
+            public int amount;
+        }
 
+        public int Amount { get; private set; }
         /// <summary>(новое значение, изменение). Изменение отрицательное, если потратили.</summary>
         public event Action<int, int> OnChanged;
+
+        public abstract string SaveKey { get; }
+        public int RestoreOrder => 40;
+
+        public string Capture()
+        {
+            return JsonUtility.ToJson(new WalletSaveData { amount = Amount });
+        }
+
+        /// <summary>Заменяет количество. OnChanged с дельтой 0: UI обновится, автолевелинг не сработает.</summary>
+        public void Restore(string json)
+        {
+            WalletSaveData data = JsonUtility.FromJson<WalletSaveData>(json);
+            if (data == null) return;
+
+            Amount = Mathf.Max(0, data.amount);
+            OnChanged?.Invoke(Amount, 0);
+        }
 
         public void Add(int amount)
         {

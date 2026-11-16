@@ -1,7 +1,9 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Game.Combat;
+using Game.Player;
 using Game.Progression;
-using Game.Stats;
+using Game.Altars;
 
 namespace Game.Debugging
 {
@@ -9,7 +11,8 @@ namespace Game.Debugging
     /// ВРЕМЕННЫЙ инструмент (заменяет CharacterStatsDebugTool). Удалить, когда появятся
     /// реальный кристалл (Phase 10), враги с наградой (Phase 8) и LevelUpUI (Phase 14).
     ///
-    /// F1 — добавить опыт, F2 — добавить валюту, F3 — «кристалл»: открыть/закрыть PointSpendingGate.
+    /// F1 — добавить опыт, F2 — добавить валюту,
+    /// F4 — Respawn игрока (воскресить на месте / полное восстановление).
     /// Кнопки в окне вкладывают очки в характеристики и открывают способности через те же публичные
     /// методы, что будет вызывать UI. Мышь: Ctrl включает курсор (DebugCursorToggle).
     /// </summary>
@@ -21,6 +24,13 @@ namespace Game.Debugging
         [SerializeField] private PointSpendingGate gate;
         [SerializeField] private AbilityPointController abilityPoints;
         [SerializeField] private AbilityTreeController abilityTree;
+
+        [Header("Player (Respawn)")]
+        [SerializeField] private PlayerController playerController;
+        [SerializeField] private HealthComponent health;
+
+        [Tooltip("Необязательно. Для строки «последний алтарь».")]
+        [SerializeField] private AltarTracker altarTracker;
 
         [SerializeField] private int experiencePerPress = 100;
         [SerializeField] private int currencyPerPress = 100;
@@ -35,10 +45,9 @@ namespace Game.Debugging
             if (keyboard.f1Key.wasPressedThisFrame) resourceWallet.Add(experiencePerPress);
             if (keyboard.f2Key.wasPressedThisFrame) currencyWallet.Add(currencyPerPress);
 
-            if (keyboard.f3Key.wasPressedThisFrame)
+            if (keyboard.f4Key.wasPressedThisFrame && playerController != null)
             {
-                if (gate.IsOpen) gate.Close();
-                else gate.Open();
+                playerController.HandleRespawn();
             }
         }
 
@@ -63,11 +72,11 @@ namespace Game.Debugging
                 ? "MAX"
                 : $"{resourceWallet.Amount} / {progression.ExperienceToNextLevel}";
 
-            GUILayout.Label("Progression (F1 опыт, F2 валюта, F3 кристалл)", header);
+            GUILayout.Label("Progression (F1 опыт, F2 валюта)", header);
             GUILayout.Label($"Class: {(progression.CurrentClass != null ? progression.CurrentClass.className : "-")}   Level: {progression.Level}", label);
             GUILayout.Label($"Exp: {exp}   Currency: {currencyWallet.Amount}", label);
-            GUILayout.Label($"Crystal (gate): {(gate.IsOpen ? "OPEN" : "closed")}", label);
-            GUILayout.Label($"Stat points: {progression.UnspentStatPoints}   Ability points: {abilityPoints.AvailablePoints}", label);
+            GUILayout.Label($"Altar gate: {(gate.IsOpen ? "OPEN" : "closed")}", label);
+             GUILayout.Label($"Stat points: {progression.UnspentStatPoints}   Ability points: {abilityPoints.AvailablePoints}", label);
 
             CharacterClassData characterClass = progression.CurrentClass;
             if (characterClass != null)
@@ -76,6 +85,8 @@ namespace Game.Debugging
                 int nextLevel = progression.Level + (interval - progression.Level % interval);
                 GUILayout.Label($"Ability points: +{characterClass.abilityPointsPerInterval} на каждом {interval}-м уровне, следующие на уровне {nextLevel}", label);
             }
+
+            DrawPlayerSection(label, header);
 
             _scroll = GUILayout.BeginScrollView(_scroll);
 
@@ -145,6 +156,35 @@ namespace Game.Debugging
 
             GUILayout.EndScrollView();
             GUILayout.EndArea();
+        }
+
+        private void DrawPlayerSection(GUIStyle label, GUIStyle header)
+        {
+            if (playerController == null || health == null) return;
+
+            GUILayout.Space(4);
+            GUILayout.Label("Player (F4 respawn)", header);
+            GUILayout.Label($"HP: {health.CurrentHealth} / {health.MaxHealth}  ({(health.IsDead() ? "DEAD" : "alive")})", label);
+
+            if (altarTracker != null)
+            {
+                string last = altarTracker.LastAltar != null ? altarTracker.LastAltar.AltarName : "-";
+                GUILayout.Label($"Last altar: {last}", label);
+            }
+
+            GUILayout.BeginHorizontal();
+            GUI.enabled = !health.IsDead();
+            if (GUILayout.Button("Kill"))
+            {
+                health.Kill();
+            }
+            GUI.enabled = true;
+
+            if (GUILayout.Button("Respawn"))
+            {
+                playerController.HandleRespawn();
+            }
+            GUILayout.EndHorizontal();
         }
     }
 }

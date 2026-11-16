@@ -44,7 +44,7 @@ namespace Game.Player.Equipment
 
         public event Action OnHandEquipmentChanged;
 
-                private void Awake()
+        private void Awake()
         {
             if (startingWeapon != null)
             {
@@ -165,6 +165,36 @@ namespace Game.Player.Equipment
             Debug.Log($"HandEquipment: активная рука — {ActiveWeaponHand} ({ActiveWeapon?.itemName})");
             OnHandEquipmentChanged?.Invoke();
             return true;
+        }
+        /// <summary>
+        /// Загрузка сохранения: заменяет руки целиком, ничего не возвращая в инвентарь
+        /// (инвентарь восстанавливается своей секцией). Нарушающие правила предметы отбрасываются.
+        /// </summary>
+        public void RestoreHands(ItemInstance main, ItemInstance off, WeaponHand activeHand)
+        {
+            if (main != null && !(main.Data is WeaponData))
+            {
+                Debug.LogWarning($"HandEquipment: {main.Data.itemName} не оружие, MainHand пропущен.", this);
+                main = null;
+            }
+
+            if (off != null && !IsValidOffHand(main, off))
+            {
+                Debug.LogWarning($"HandEquipment: {off.Data.itemName} нельзя держать во второй руке, OffHand пропущен.", this);
+                off = null;
+            }
+
+            MainHandItem = main;
+            OffHandItem = off;
+            ActiveWeaponHand = activeHand == WeaponHand.OffHand && IsDualWielding ? WeaponHand.OffHand : WeaponHand.MainHand;
+            OnHandEquipmentChanged?.Invoke();
+        }
+
+        private static bool IsValidOffHand(ItemInstance main, ItemInstance off)
+        {
+            if (main != null && main.Data is WeaponData mainWeapon && mainWeapon.isTwoHanded) return false;
+
+            return off.Data is ShieldData || (off.Data is WeaponData offWeapon && !offWeapon.isTwoHanded);
         }
     }
 }

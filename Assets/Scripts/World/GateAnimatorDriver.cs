@@ -28,16 +28,26 @@ namespace Game.World
         }
 
 
-        private void OnEnable()
+         private void OnEnable()
         {
             gate.OnOpened += HandleOpened;
             gate.OnClosed += HandleClosed;
+            gate.OnStateRestored += HandleRestored;
         }
 
         private void OnDisable()
         {
             gate.OnOpened -= HandleOpened;
             gate.OnClosed -= HandleClosed;
+            gate.OnStateRestored -= HandleRestored;
+        }
+
+        private void HandleRestored(bool open)
+        {
+            _target = open ? 1f : 0f;
+            _progress = _target;
+            _moving = false;
+            animator.SetFloat(GateAnimatorIds.Progress, _progress);
         }
 
         private void Start()
